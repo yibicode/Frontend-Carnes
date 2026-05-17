@@ -21,9 +21,9 @@ export default function Login() {
       const userRole = data.rol || localStorage.getItem('rol') || 'CLIENTE';
 
       if (userRole === 'ROLE_ADMIN' || userRole === 'ADMIN') {
-        window.location.href = '/dashboard';
+        navigate('/dashboard');
       } else {
-        window.location.href = '/catalogo';
+        navigate('/catalogo');
       }
     } catch (err) {
       setError(err.message || 'Credenciales incorrectas');
