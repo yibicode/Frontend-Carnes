@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
-import { Beef, LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ShieldCheck, LogOut } from 'lucide-react';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -29,26 +30,20 @@ const ProtectedRoute = ({ children, roleRequired }) => {
   return children;
 };
 
-const Navbar = () => {
-  const token = localStorage.getItem('token');
+const Navbar = ({ token, onLogout }) => {
   const username = localStorage.getItem('username');
-
-  const handleLogout = () => {
-    logout();
-    window.location.href = '/login';
-  };
 
   return (
     <nav className="navbar">
       <div className="container navbar-content">
         <div className="navbar-brand">
-          <Beef color="#ef4444" size={32} />
-          <span>ProyectoCarnes</span>
+          <ShieldCheck color="#ef4444" size={32} />
+          <span>Safelabels</span>
         </div>
         {token && (
           <div className="navbar-nav">
             <span style={{ color: 'var(--text-secondary)' }}>Hola, {username}</span>
-            <button onClick={handleLogout} className="btn-secondary" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center' }}>
+            <button onClick={onLogout} className="btn-secondary" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center' }}>
               <LogOut size={18} />
             </button>
           </div>
@@ -59,13 +54,25 @@ const Navbar = () => {
 };
 
 function App() {
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+  const handleLoginSuccess = () => {
+    setToken(localStorage.getItem('token'));
+  };
+
+  const handleLogout = () => {
+    logout();
+    setToken(null);
+    window.location.href = '/login';
+  };
+
   return (
     <Router>
-      <Navbar />
+      <Navbar token={token} onLogout={handleLogout} />
       <main className="page-wrapper container">
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/register" element={<Register />} />
           <Route 
             path="/dashboard" 

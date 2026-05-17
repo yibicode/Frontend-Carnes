@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 import { login } from '../api';
 
-export default function Login() {
+export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,6 +19,10 @@ export default function Login() {
       const data = await login(username, password);
       
       const userRole = data.rol || localStorage.getItem('rol') || 'CLIENTE';
+
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
 
       if (userRole === 'ROLE_ADMIN' || userRole === 'ADMIN') {
         navigate('/dashboard');
