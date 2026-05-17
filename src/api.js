@@ -1,8 +1,8 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export const apiFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
-  
+
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
@@ -27,12 +27,12 @@ export const apiFetch = async (endpoint, options = {}) => {
   if (contentType && contentType.includes('application/json')) {
     return response.json();
   }
-  
+
   return response.text();
 };
 
 export const login = async (username, password) => {
-  const data = await apiFetch('/auth/login', {
+  const data = await apiFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({ username, password }),
   });
@@ -47,26 +47,26 @@ export const login = async (username, password) => {
 };
 
 export const register = async (username, password, rol) => {
-  return apiFetch('/auth/registro', {
+  return apiFetch('/api/auth/registro', {
     method: 'POST',
     body: JSON.stringify({ username, password, rol }),
   });
 };
 
 export const getCarnes = async () => {
-  return apiFetch('/carnes');
+  return apiFetch('/api/carnes');
 };
 
 export const getCarneByCodigo = async (codigo) => {
-  return apiFetch(`/carnes/${codigo}`);
+  return apiFetch(`/api/carnes/${codigo}`);
 };
 
 export const getCarnesByLote = async (codigoLote) => {
-  return apiFetch(`/carnes/lote/${codigoLote}`);
+  return apiFetch(`/api/carnes/lote/${codigoLote}`);
 };
 
 export const registerCarne = async (carneData) => {
-  return apiFetch('/carnes', {
+  return apiFetch('/api/carnes', {
     method: 'POST',
     body: JSON.stringify(carneData),
   });
